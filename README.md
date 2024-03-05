@@ -189,6 +189,7 @@ flags:
 - `-a|--alias "BLUE_DATABASE"`: an alternative alias to use for linking to an app via environment variable
 - `-q|--querystring "pool=5"`: ampersand delimited querystring arguments to append to the service link
 - `-n|--no-restart "false"`: whether or not to restart the app on link (default: true)
+- `-U|--unified "false"`: whether or not to have the master key inside the URL (default: true)
 
 A meilisearch service can be linked to a container. This will use native docker links via the docker-options plugin. Here we link it to our `playground` app.
 
