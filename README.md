@@ -1,6 +1,6 @@
 # dokku meilisearch [![Build Status](https://img.shields.io/github/actions/workflow/status/dokku/dokku-meilisearch/ci.yml?branch=master&style=flat-square "Build Status")](https://github.com/dokku/dokku-meilisearch/actions/workflows/ci.yml?query=branch%3Amaster) [![IRC Network](https://img.shields.io/badge/irc-libera-blue.svg?style=flat-square "IRC Libera")](https://webchat.libera.chat/?channels=dokku)
 
-Official meilisearch plugin for dokku. Currently defaults to installing [getmeili/meilisearch v1.6.1](https://hub.docker.com/r/getmeili/meilisearch/).
+Official meilisearch plugin for dokku. Currently defaults to installing [getmeili/meilisearch v1.15.2](https://hub.docker.com/r/getmeili/meilisearch/).
 
 ## Requirements
 
@@ -11,13 +11,15 @@ Official meilisearch plugin for dokku. Currently defaults to installing [getmeil
 
 ```shell
 # on 0.19.x+
-sudo dokku plugin:install https://github.com/dokku/dokku-meilisearch.git meilisearch
+sudo dokku plugin:install https://github.com/dokku/dokku-meilisearch.git --name meilisearch
 ```
 
 ## Commands
 
 ```
 meilisearch:app-links <app>                        # list all meilisearch service links for a given app
+meilisearch:backup-set-public-key-encryption <service> <public-key-id> # set GPG Public Key encryption for all future backups of meilisearch service
+meilisearch:backup-unset-public-key-encryption <service> # unset GPG Public Key encryption for future backups of the meilisearch service
 meilisearch:create <service> [--create-flags...]   # create a meilisearch service
 meilisearch:destroy <service> [-f|--force]         # delete the meilisearch service/data/container if there are no links left
 meilisearch:enter <service>                        # enter or run a command in a running meilisearch service container
@@ -317,7 +319,7 @@ Expose the service on the service's normal ports, allowing access to it from the
 dokku meilisearch:expose lollipop 7700
 ```
 
-Expose the service on the service's normal ports, with the first on a specified ip adddress (127.0.0.1):
+Expose the service on the service's normal ports, with the first on a specified ip address (127.0.0.1):
 
 ```shell
 dokku meilisearch:expose lollipop 127.0.0.1:7700
@@ -496,6 +498,39 @@ List all apps linked to the `lollipop` meilisearch service.
 
 ```shell
 dokku meilisearch:links lollipop
+```
+### Backups
+
+Datastore backups are supported via AWS S3 and S3 compatible services like [minio](https://github.com/minio/minio).
+
+You may skip the `backup-auth` step if your dokku install is running within EC2 and has access to the bucket via an IAM profile. In that case, use the `--use-iam` option with the `backup` command.
+
+Backups can be performed using the backup commands:
+
+### set GPG Public Key encryption for all future backups of meilisearch service
+
+```shell
+# usage
+dokku meilisearch:backup-set-public-key-encryption <service> <public-key-id>
+```
+
+Set the `GPG` Public Key for encrypting backups:
+
+```shell
+dokku meilisearch:backup-set-public-key-encryption lollipop
+```
+
+### unset GPG Public Key encryption for future backups of the meilisearch service
+
+```shell
+# usage
+dokku meilisearch:backup-unset-public-key-encryption <service>
+```
+
+Unset the `GPG` Public Key encryption for backups:
+
+```shell
+dokku meilisearch:backup-unset-public-key-encryption lollipop
 ```
 
 ### Disabling `docker image pull` calls
